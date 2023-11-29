@@ -1,6 +1,6 @@
 #include "scene_planet_level.h"
-#include "../drop_pod_game.h"
-#include "engine.h"
+#include "../last_light.h"
+#include "../engine/engine.h"
 #include "../components/cmp_actor_movement.h"
 #include "../components/cmp_player.h"
 #include "../components/cmp_monster.h"

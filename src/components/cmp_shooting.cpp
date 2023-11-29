@@ -1,6 +1,6 @@
 // Shooting component C++ file
 #include "cmp_shooting.h"
-#include "../drop_pod_game.h"
+#include "../last_light.h"
 #include "cmp_actor_movement.h"
 #include "cmp_sprite.h"
 #include <SFML/Graphics.hpp>
@@ -24,7 +24,7 @@ bool isVisible = false;
 float angle;
 Vector2f mousePos;
 
-auto temp2 = Texture::Texture();
+auto temp2 = Texture();
 auto spriteTexture = make_shared<Texture>(temp2);
 
 ShootingComponent::ShootingComponent(Entity* p) : ActorMovementComponent(p) {
