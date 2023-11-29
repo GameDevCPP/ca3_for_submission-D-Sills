@@ -1,7 +1,7 @@
 //C++ file that handles movement of entities
 #include "cmp_actor_movement.h"
 #include <LevelSystem.h>
-#include <engine.h>
+
 using namespace sf;
 using namespace std;
 

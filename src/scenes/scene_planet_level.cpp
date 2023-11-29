@@ -8,7 +8,7 @@
 #include "../components/cmp_sprite.h"
 #include "../components/cmp_text.h"
 #include <LevelSystem.h>
-#include <system_resources.h>
+#include "../engine/system_resources.h"
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <stdio.h>

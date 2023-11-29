@@ -4,7 +4,7 @@
 #include "cmp_player.h"
 #include "../scenes/scene_planet_level.h"
 #include "cmp_sprite.h"
-#include "engine.h"
+
 
 using namespace std;
 using namespace sf;

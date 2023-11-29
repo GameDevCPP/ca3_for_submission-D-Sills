@@ -4,6 +4,8 @@
 
 #include "cmp_sprite.h"
 #include "../last_light.h"
+#include "../engine/system_resources.h"
+
 using namespace std;
 using namespace sf;
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(YourProjectName LANGUAGES CXX)
+project(LastLight LANGUAGES CXX)
 
 # Fetch and setup SFML
 include(FetchContent)
@@ -12,37 +12,29 @@ FetchContent_MakeAvailable(SFML)
 file(GLOB_RECURSE PROJECT_SOURCES
         "${CMAKE_SOURCE_DIR}/src/*.cpp"
         "${CMAKE_SOURCE_DIR}/src/*.h")
-add_executable(YourProjectName ${PROJECT_SOURCES})
+add_executable(LastLight ${PROJECT_SOURCES})
 
 # Copy resources
-add_custom_command(TARGET YourProjectName POST_BUILD
+add_custom_command(TARGET LastLight POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_SOURCE_DIR}/res"
-        $<TARGET_FILE_DIR:YourProjectName>/res
+        $<TARGET_FILE_DIR:LastLight>/res
 )
-target_link_libraries(YourProjectName PRIVATE sfml-graphics sfml-audio)
-target_compile_features(YourProjectName PRIVATE cxx_std_17)
+target_link_libraries(LastLight PRIVATE sfml-graphics)
+target_compile_features(LastLight PRIVATE cxx_std_17)
 
 # Windows specific options
 if (WIN32 AND BUILD_SHARED_LIBS)
-    add_custom_command(TARGET YourProjectName POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:YourProjectName> $<TARGET_FILE_DIR:YourProjectName> COMMAND_EXPAND_LISTS)
+    add_custom_command(TARGET LastLight POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:LastLight> $<TARGET_FILE_DIR:LastLight> COMMAND_EXPAND_LISTS)
 endif()
 
 # Add libraries
 # B2D library
-file(GLOB_RECURSE B2D_SOURCES
-        "${CMAKE_SOURCE_DIR}/lib/b2d/*.cpp"
-        "${CMAKE_SOURCE_DIR}/lib/b2d/*.h")
-add_library(lib_b2d STATIC ${B2D_SOURCES})
-target_include_directories(lib_b2d INTERFACE "${CMAKE_SOURCE_DIR}/lib/b2d")
+add_subdirectory("lib/b2d/Box2D")
 
-# Engine
-file(GLOB_RECURSE ENGINE_SOURCES
-        "${CMAKE_SOURCE_DIR}/engine/*.cpp"
-        "${CMAKE_SOURCE_DIR}/engine/*.h")
-add_library(lib_engine STATIC ${ENGINE_SOURCES})
-target_include_directories(lib_engine INTERFACE "${CMAKE_SOURCE_DIR}/engine")
+# Let's simplify the include and link process for Box2D
+target_include_directories(Box2D INTERFACE "lib/b2d/Box2D/")
 
 # ECM library
 file(GLOB_RECURSE ECM_SOURCES
@@ -66,8 +58,10 @@ target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/
 # World gen library (add similar block if needed)
 
 # Linking libraries
-target_link_libraries(YourProjectName PRIVATE sfml-graphics sfml-audio lib_engine lib_b2d lib_ecm lib_maths lib_tile_level_loader)
+target_link_libraries(LastLight PRIVATE sfml-graphics sfml-audio Box2D lib_ecm lib_maths lib_tile_level_loader)
+target_link_libraries(lib_ecm sfml-graphics lib_maths)
+target_link_libraries(lib_tile_level_loader sfml-graphics lib_maths)
 
 # Installation (if needed)
-install(TARGETS YourProjectName)
+install(TARGETS LastLight)
 

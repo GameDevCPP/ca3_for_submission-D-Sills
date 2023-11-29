@@ -1,10 +1,10 @@
 // Button component C++ file
 #include"cmp_button.h"
 #include<SFML/Window.hpp>
-#include <system_renderer.h>
-#include <system_resources.h>
-#include "engine.h"
+
 #include "../last_light.h"
+#include "../engine/system_renderer.h"
+#include "../engine/system_resources.h"
 
 using namespace sf;
 using namespace std;

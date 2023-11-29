@@ -3,8 +3,7 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <ecm.h>
-#include <system_renderer.h>
-#include <system_resources.h>
+
 #include <SFML/Audio.hpp>
 
 enum button_states { BUTTON_IDLE, BUTTON_HOVER, BUTTON_ACTIVED, BUTTON_DOWN };

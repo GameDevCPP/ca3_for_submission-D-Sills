@@ -6,8 +6,8 @@
 #include <SFML/Graphics.hpp>
 
 #include "cmp_monster.h"
-#include "system_renderer.h"
-#include "engine.h"
+#include "../engine/system_resources.h"
+#include "../engine/system_renderer.h"
 
 using namespace std;
 using namespace sf;

@@ -5,6 +5,8 @@
 #include <iostream>
 #include"../components/cmp_button.h"
 #include "../engine/engine.h"
+#include "../engine/system_resources.h"
+#include "../engine/system_renderer.h"
 #include <SFML/Audio.hpp>
 #include <iostream>
 
