@@ -1,6 +1,6 @@
 #include "cmp_text.h"
-#include "../engine/system_renderer.h"
-#include "../engine/system_resources.h"
+#include "../../engine/system_renderer.h"
+#include "../../engine/system_resources.h"
 
 void TextComponent::update(double dt) {}
 

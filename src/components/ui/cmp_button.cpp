@@ -2,9 +2,9 @@
 #include"cmp_button.h"
 #include<SFML/Window.hpp>
 
-#include "../last_light.h"
-#include "../engine/system_renderer.h"
-#include "../engine/system_resources.h"
+#include "../../last_light.h"
+#include "../../engine/system_renderer.h"
+#include "../../engine/system_resources.h"
 
 using namespace sf;
 using namespace std;

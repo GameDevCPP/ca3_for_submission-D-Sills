@@ -37,12 +37,12 @@ void SettingsScene::Load() {
 	auto button = btnArrows->addComponent<Button>(btn4Pos, "Arrows Movment", sf::Color::White, sf::Color::Green, sf::Color::Red);
 
 	auto txt3 = makeEntity();
-	auto t3 = txt3->addComponent<TextComponent>(settingsView.getSize().x / 2.0f, settingsView.getSize().y / 5.0f, switchState == WSAD ? "WSAD" : "Arrows");
+	auto t3 = txt3->addComponent<TextComponent>(settingsView.getSize().x / 2.0f, settingsView.getSize().y / 5.0f, switchState == WASD ? "WASD" : "Arrows");
 	t3->setTextSize(20);
 
 	btnWsad = makeEntity();
 	auto btn5Pos = Vector2f(settingsView.getSize().x / 2.7f, settingsView.getSize().y / 5.0f);
-	auto button2 = btnWsad->addComponent<Button>(btn5Pos, "WSAD Movment", sf::Color::White, sf::Color::Green, sf::Color::Red);
+	auto button2 = btnWsad->addComponent<Button>(btn5Pos, "WASD Movment", sf::Color::White, sf::Color::Green, sf::Color::Red);
 
 	btn1280 = makeEntity();
 	auto btn6Pos = Vector2f(settingsView.getSize().x / 1.6f, settingsView.getSize().y / 3.0f);
@@ -85,7 +85,7 @@ void SettingsScene::Update(const double& dt) {
 		Engine::ChangeScene(&settings);
 	}
 	else if (btnWsad->GetCompatibleComponent<Button>()[0]->isPressed()) {
-		switchState = WSAD;
+		switchState = WASD;
 		Engine::ChangeScene(&settings);
 	}
 	else if (btn1280->GetCompatibleComponent<Button>()[0]->isPressed()) {

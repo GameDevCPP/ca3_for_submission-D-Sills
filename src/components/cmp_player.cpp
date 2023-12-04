@@ -38,7 +38,7 @@ void PlayerComponent::update(const double dt)
 
 	//Checks which control scheme is used and checks if a movement key is being pressed
 	switch (switchState) {
-	case WSAD:
+	case WASD:
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 			directX--;

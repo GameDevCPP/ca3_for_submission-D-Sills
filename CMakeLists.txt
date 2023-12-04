@@ -12,7 +12,13 @@ FetchContent_MakeAvailable(SFML)
 file(GLOB_RECURSE PROJECT_SOURCES
         "${CMAKE_SOURCE_DIR}/src/*.cpp"
         "${CMAKE_SOURCE_DIR}/src/*.h")
-add_executable(LastLight ${PROJECT_SOURCES})
+add_executable(LastLight ${PROJECT_SOURCES}
+        src/engine/loading_screen.cpp
+        src/engine/scene.h
+        src/player/player.cpp
+        src/player/player.h
+        src/components/cmp_interactable.cpp
+        src/components/cmp_interactable.h)
 
 # Copy resources
 add_custom_command(TARGET LastLight POST_BUILD
@@ -56,6 +62,14 @@ add_library(lib_tile_level_loader STATIC ${TILE_LOADER_SOURCES})
 target_include_directories(lib_tile_level_loader INTERFACE "${CMAKE_SOURCE_DIR}/lib/tile_level_loader")
 
 # World gen library (add similar block if needed)
+
+# CSV Reader library
+file(GLOB_RECURSE CSV_READER_SOURCES
+        "${CMAKE_SOURCE_DIR}/lib/csv_reader/*.cpp"
+        "${CMAKE_SOURCE_DIR}/lib/csv_reader/*.h")
+add_library(lib_csv_reader STATIC ${CSV_READER_SOURCES})
+target_include_directories(lib_csv_reader INTERFACE "${CMAKE_SOURCE_DIR}/lib/csv_reader")
+
 
 # Linking libraries
 target_link_libraries(LastLight PRIVATE sfml-graphics sfml-audio Box2D lib_ecm lib_maths lib_tile_level_loader)

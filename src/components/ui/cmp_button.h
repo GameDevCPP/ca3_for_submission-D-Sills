@@ -16,17 +16,23 @@ private:
 	sf::Color idleColor;
 	sf::Color hoverColor;
 	sf::Color activeColor;
-public:
-	sf::Text _text;
+    std::shared_ptr<sf::SoundBuffer> sound_buffer;
+    sf::Sound soundHover;
+    bool isHoveredFirstTime;
+    short unsigned buttonState;
+    sf::SoundBuffer sound_buffer;
+    sf::Text _text;
 
-	short unsigned buttonState;
-	sf::SoundBuffer sound_buffer;
+public:
+
+
+
 	sf::Sound soundClick;
+
 
 	Button() = delete;
 
 	explicit Button(Entity* p, sf::Vector2f position, std::string text, sf::Color idleColor, sf::Color hoverColor, sf::Color activeColor);
-	void LoadMusic();
 	void update(double dt) override;
 	void render() override;
 	~Button() override = default;

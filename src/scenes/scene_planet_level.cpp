@@ -1,18 +1,14 @@
 #include "scene_planet_level.h"
 #include "../last_light.h"
-#include "../engine/engine.h"
 #include "../components/cmp_actor_movement.h"
 #include "../components/cmp_player.h"
 #include "../components/cmp_monster.h"
 #include "../components/cmp_shooting.h"
 #include "../components/cmp_sprite.h"
-#include "../components/cmp_text.h"
 #include <LevelSystem.h>
 #include "../engine/system_resources.h"
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
-#include <stdio.h>
-
 using namespace std;
 using namespace sf;
 

@@ -1,12 +1,12 @@
 #include "scene_menu.h"
-#include "../components/cmp_text.h"
 #include "../last_light.h"
 #include "LevelSystem.h"
 #include <iostream>
-#include"../components/cmp_button.h"
+#include"../components/ui/cmp_button.h"
 #include "../engine/engine.h"
 #include "../engine/system_resources.h"
 #include "../engine/system_renderer.h"
+#include "../components/ui/cmp_text.h"
 #include <SFML/Audio.hpp>
 #include <iostream>
 

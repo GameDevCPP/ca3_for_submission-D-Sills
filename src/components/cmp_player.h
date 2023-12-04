@@ -4,7 +4,7 @@
 #include "cmp_actor_movement.h"
 #include <ecm.h>
 
-enum move_states { WSAD, Arrows };
+enum move_states { WASD, Arrows };
 
 class PlayerComponent : public ActorMovementComponent {
 public:

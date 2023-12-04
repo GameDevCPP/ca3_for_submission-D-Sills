@@ -114,11 +114,11 @@ void Bullet::_update(const double dt) {
 		this->move(0, sin(this->angle) * 200.f * dt);
 	}
 
-	auto ecm = planetLevel.getEcm();
-	auto enemies = ecm.find("enemy");
+	auto ecm = Engine::_activeScene->ents.list;
+	auto enemies = Engine::_activeScene->ents.find("enemy");
 	auto boundingBox = getGlobalBounds();
 
-	for (auto enemy : enemies)
+	for (const auto& enemy : enemies)
 	{
 		auto sprite = enemy->GetCompatibleComponent<SpriteComponent>()[0]->getSprite();
 		auto spriteBounds = sprite.getGlobalBounds();

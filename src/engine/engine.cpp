@@ -3,79 +3,40 @@
 #include "system_physics.h"
 #include "system_renderer.h"
 #include "system_resources.h"
+#include "loading_screen.h"
 #include <SFML/Graphics.hpp>
 #include <future>
 #include <iostream>
+//include scene
+#include "scene.h"
 
 using namespace sf;
 using namespace std;
 Scene* Engine::_activeScene = nullptr;
 std::string Engine::_gameName;
-
-static bool loading = false;
-static float loadingspinner = 0.f;
-static float loadingTime;
 static RenderWindow* _window;
 
-void Loading_update(float dt, const Scene* const scn) {
-	//  cout << "Eng: Loading Screen\n";
-	if (scn->isLoaded()) {
-		cout << "Eng: Exiting Loading Screen\n";
-		loading = false;
-	}
-	else {
-		loadingspinner += 400.0f * dt;
-		loadingTime += dt;
-	}
-}
-void Loading_render() {
-	// cout << "Eng: Loading Screen Render\n";
-
-	static Sprite background;
-	auto backTexture = Resources::get<Texture>("Space_Background.png");
-	background.setTexture(*backTexture);
-
-	static CircleShape octagon(100);
-	octagon.setOrigin(Vector2f(100, 100));
-	octagon.setRotation(deg2rad(loadingspinner));
-	octagon.setPosition(Vcast<float>(Engine::getWindowSize()) * .5f);
-	auto tex = new Texture();
-	tex->loadFromFile("res/img/Terran.png");
-	octagon.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
-	octagon.setTexture(tex);
-
-	static Text t("Loading", *Resources::get<sf::Font>("RobotoMono-Regular.ttf"));
-	t.setFillColor(Color(255, 255, 255, min(255.f, 40.f * loadingTime)));
-	t.setOutlineThickness(2);
-	t.setPosition(Vcast<float>(Engine::getWindowSize()) * Vector2f(0.5f, 0.3f));
-	t.setOrigin(t.getLocalBounds().left + t.getLocalBounds().width / 2.0f,
-		t.getLocalBounds().top + t.getLocalBounds().height / 2.0f);
-	Renderer::queue(&background);
-	Renderer::queue(&t);
-	Renderer::queue(&octagon);
-}
-
-float frametimes[256] = {};
+float frameTimes[256] = {};
 uint8_t ftc = 0;
 
 void Engine::Update() {
 	static sf::Clock clock;
 	float dt = clock.restart().asSeconds();
 	{
-		frametimes[++ftc] = dt;
+        frameTimes[++ftc] = dt;
 		static string avg = _gameName + " FPS:";
 		if (ftc % 60 == 0) {
-			double davg = 0;
-			for (const auto t : frametimes) {
-				davg += t;
+			double d = 0;
+			for (const auto t : frameTimes) {
+                d += t;
 			}
-			davg = 1.0 / (davg / 255.0);
-			_window->setTitle(avg + toStrDecPt(2, davg));
+            d = 1.0 / (d / 255.0);
+			_window->setTitle(avg + toStrDecPt(2, d));
 		}
 	}
 
-	if (loading) {
-		Loading_update(dt, _activeScene);
+	if (LoadingScreen::IsLoading()) {
+		LoadingScreen::Update(dt, _activeScene);
 	}
 	else if (_activeScene != nullptr) {
 		Physics::update(dt);
@@ -84,8 +45,8 @@ void Engine::Update() {
 }
 
 void Engine::Render(RenderWindow& window) {
-	if (loading) {
-		Loading_render();
+	if (LoadingScreen::IsLoading()) {
+		LoadingScreen::Render();
 	}
 	else if (_activeScene != nullptr) {
 		_activeScene->Render();
@@ -110,9 +71,6 @@ void Engine::Start(unsigned int width, unsigned int height,
 				window.close();
 			}
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Escape)) {
-			window.close();
-		}
 
 		window.clear();
 		Update();
@@ -128,31 +86,23 @@ void Engine::Start(unsigned int width, unsigned int height,
 	// Render::shutdown();
 }
 
-std::shared_ptr<Entity> Scene::makeEntity() {
-	auto e = make_shared<Entity>(this);
-	ents.list.push_back(e);
-	return std::move(e);
-}
 
-//void Scene::addEntity(shared_ptr<Entity> entity) {
-//	ents.list.push_back(entity);
-//}
 
 void Engine::setVsync(bool b) { _window->setVerticalSyncEnabled(b); }
 
 void Engine::setView(View v) { _window->setView(v); }
 
 void Engine::moveView(Vector2f movement) {
-	View tempview = _window->getView();
-	tempview.move(movement);
-	Engine::setView(tempview);
+	View getView = _window->getView();
+	getView.move(movement);
+	Engine::setView(getView);
 }
 
 // CHANGE RES PART
 void Engine::changeResolution(int x, int y)
 {
 	Vector2f _newResolution(x, y);
-	_window->create(VideoMode(_newResolution.x, _newResolution.y), "Drop Pod");
+	_window->create(VideoMode(_newResolution.x, _newResolution.y), "Last Light");
 }
 
 void Engine::ChangeScene(Scene* s) {
@@ -166,10 +116,9 @@ void Engine::ChangeScene(Scene* s) {
 
 	if (!s->isLoaded()) {
 		cout << "Eng: Entering Loading Screen\n";
-		loadingTime = 0;
-		_activeScene->LoadAsync(); 
-		//_activeScene->Load();
-		loading = true;
+
+        LoadingScreen::Load();
+        _activeScene->LoadAsync();
 	}
 }
 
@@ -267,40 +216,7 @@ sf::Vector2f Engine::flocking(Entity* thisEnemy, Vector2f toPlayer)
 	return movement;
 }
 
-void Scene::Update(const double& dt) { ents.update(dt); }
 
-void Scene::Render() { ents.render(); }
-
-EntityManager Scene::getEcm() { return ents; }
-
-bool Scene::isLoaded() const {
-	{
-		std::lock_guard<std::mutex> lck(_loaded_mtx);
-		// Are we already loading asynchronously?
-		if (_loaded_future.valid() // yes
-			&&                     // Has it finished?
-			_loaded_future.wait_for(chrono::seconds(0)) ==
-			future_status::ready) {
-			// Yes
-			_loaded_future.get();
-			_loaded = true;
-		}
-		return _loaded;
-	}
-}
-void Scene::setLoaded(bool b) {
-	{
-		std::lock_guard<std::mutex> lck(_loaded_mtx);
-		_loaded = b;
-	}
-}
-
-void Scene::UnLoad() {
-	ents.list.clear();
-	setLoaded(false);
-}
-
-void Scene::LoadAsync() { _loaded_future = std::async(&Scene::Load, this); }
 
 sf::Vector2u Engine::getWindowSize() { return _window->getSize(); }
 
@@ -322,5 +238,3 @@ namespace timing {
 		return dt;
 	}
 } // namespace timing
-
-Scene::~Scene() { UnLoad(); }
